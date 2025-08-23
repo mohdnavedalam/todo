@@ -39,11 +39,16 @@ function App() {
         </table>;
 
     return (
+        <>
+        <div>
+            <h1 id="tableLabel">todo app coming soon ...</h1>
+        </div>
         <div>
             <h1 id="tableLabel">Weather forecast</h1>
             <p>This component demonstrates fetching data from the server.</p>
             {contents}
-        </div>
+            </div>
+        </>
     );
 
     async function populateWeatherData() {
