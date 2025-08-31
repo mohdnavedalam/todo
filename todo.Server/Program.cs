@@ -50,7 +50,11 @@ app.UseStaticFiles();
 //}
 
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(link =>
+{
+    link.SwaggerEndpoint("v1/swagger.json", "ToDo Backend APIs V1");
+    link.RoutePrefix = "swagger";
+});
 
 
 
