@@ -49,3 +49,66 @@
     outline: none;
     box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
 }
+
+.todo-card {
+    background-color: #222121;
+    border-radius: 6px;
+    padding: 5px 7px;
+    margin: 8px 0;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.todo-card:hover {
+    background-color: #333232;
+}
+
+.todo-card:focus-within {
+    background-color: #52585f;
+    /* outline: 2px solid #4a90e2; */
+    /* outline-offset: 2px; */
+}
+
+.todo-text {
+    flex: 1;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.todo-delete {
+    background: #ff4444;
+    border: none;
+    color: #ffffff;
+    padding: 5px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: max-content;
+}
+
+.todo-delete:hover {
+    background-color: rgba(255, 0, 0, 0.2);
+    /* color: #ff4444; */
+}
+
+.todo-delete:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 0, 0, 0.2);
+    color: #ff4444;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
