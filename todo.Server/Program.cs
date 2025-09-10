@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using todo.Server.Data;
+using todo.Server.Services.Contracts;
+using todo.Server.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options => {
 //        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
 //    });
 //});
+builder.Services.AddScoped<ITodoActions, TodoActions>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
