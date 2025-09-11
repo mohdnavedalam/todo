@@ -13,14 +13,23 @@ namespace todo.Server.Services.Implementations
         {
             _context = context;
         }
-        public Task<Todos> AddTodo(Todos todo)
+        public async Task<Todos> AddTodo(Todos todo)
         {
-            throw new NotImplementedException();
+            await _context.Todos.AddAsync(todo);
+            await _context.SaveChangesAsync();
+            return todo;
         }
 
         public Task<bool> DeleteTodo(int id)
         {
-            throw new NotImplementedException();
+            var todoinDb = _context.Todos.Find(id);
+            if (todoinDb == null)
+            {
+                return Task.FromResult(false);
+            }
+            _context.Todos.Remove(todoinDb);
+            _context.SaveChangesAsync();
+            return Task.FromResult(true);
         }
 
         public Task<List<Todos>> GetAllTodos()
@@ -30,12 +39,20 @@ namespace todo.Server.Services.Implementations
 
         public Task<Todos?> GetTodoById(int id)
         {
-            throw new NotImplementedException();
+            var todoinDb = _context.Todos.Find(id);
+            return Task.FromResult(todoinDb);
         }
 
         public Task<Todos?> UpdateTodo(int id, Todos todo)
         {
-            throw new NotImplementedException();
+            var todoinDb = _context.Todos.Find(id);
+            if (todoinDb == null)
+            {
+                return Task.FromResult<Todos?>(null);
+            }
+            todoinDb.Task = todo.Task;
+            _context.SaveChangesAsync();
+            return Task.FromResult<Todos?>(todoinDb);
         }
     }
 }
