@@ -18,7 +18,8 @@ const Todo = () => {
     useEffect(() => {
         fetchTodos();
     }, []); // Remove todos from dependency to avoid infinite loop
-
+    console.log('loading:', loading);
+    console.log('error:', error);
     const fetchTodos = async () => {
         try {
             setLoading(true);
