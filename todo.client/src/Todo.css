@@ -106,6 +106,36 @@
     color: #ff4444;
 }
 
+.todo-error {
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.todo-retry {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.todo-retry:hover {
+    background-color: #b91c1c;
+}
+
+.todo-loading {
+    text-align: center;
+    color: #666;
+    margin-top: 24px;
+}
+
 .todo-item {
     display: flex;
     justify-content: space-between;
