@@ -7,16 +7,16 @@ using todo.Server.Services.Implementations;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<AppDbContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDbConnection"));
-});
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//{
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDbConnection"), builder =>
-//    {
-//        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-//    });
+//builder.Services.AddDbContext<AppDbContext>(options => {
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDbConnection"));
 //});
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDbConnection"), builder =>
+    {
+        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+    });
+});
 builder.Services.AddScoped<ITodoActions, TodoActions>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
