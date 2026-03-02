@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://localhost:7015',
+    baseURL: 'https://todo-app-fkbjfsbuhfbkaza4.canadacentral-01.azurewebsites.net',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
