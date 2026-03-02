@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using todo.Server.Data;
 using todo.Server.Services.Contracts;
 using todo.Server.Services.Implementations;
@@ -19,60 +18,36 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 builder.Services.AddScoped<ITodoActions, TodoActions>();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "ToDo API",
-        Description = "An ASP.NET Core Web API for managing ToDo items",
-        TermsOfService = new Uri("https://example.com/terms"),
-        Contact = new OpenApiContact
-        {
-            Name = "Example Contact",
-            Url = new Uri("https://example.com/contact")
-        },
-        License = new OpenApiLicense
-        {
-            Name = "Example License",
-            Url = new Uri("https://example.com/license")
-        }
-    });
-});
+// Learn more about configuring OpenAPI at https://aka.ms/aspnetcore/openapi
+builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        builder =>
+        corsBuilder =>
         {
-            builder.WithOrigins("https://localhost:61207/")
-            .AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            corsBuilder.WithOrigins("https://localhost:61207")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
         });
 });
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
-
-app.UseSwagger();
-app.UseSwaggerUI(link =>
+// HTTPS redirection is disabled in development
+if (app.Environment.IsDevelopment())
 {
-    link.SwaggerEndpoint("v1/swagger.json", "ToDo Backend APIs V1");
-    link.RoutePrefix = "swagger";
-});
-
-
-
-app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("AllowSpecificOrigin");
 
