@@ -5,6 +5,15 @@ using todo.Server.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to use HTTPS
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenLocalhost(7015, listenOptions =>
+    {
+        listenOptions.UseHttps();
+    });
+});
+
 // Add services to the container.
 //builder.Services.AddDbContext<AppDbContext>(options => {
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDbConnection"));

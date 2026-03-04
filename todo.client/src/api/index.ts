@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://todo-app-fkbjfsbuhfbkaza4.canadacentral-01.azurewebsites.net',
+    baseURL: import.meta.env.VITE_API_URL || 'https://localhost:7015',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
