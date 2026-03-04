@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+debugger;
+console.log('API URL:', import.meta.env.VITE_API_URL || 'https://localhost:7015');
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'https://localhost:7015',
     headers: {
@@ -7,6 +9,8 @@ const api = axios.create({
         'Accept': 'application/json'
     }
 });
+
+console.log('API URL:', import.meta.env.VITE_API_URL || 'https://localhost:7015');
 
 // Add request interceptor to handle errors
 api.interceptors.request.use(
