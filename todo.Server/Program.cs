@@ -5,14 +5,17 @@ using todo.Server.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Kestrel to use HTTPS
-builder.WebHost.ConfigureKestrel(options =>
+// Configure Kestrel to use HTTPS only in local development
+if (builder.Environment.IsDevelopment())
 {
-    options.ListenLocalhost(7015, listenOptions =>
+    builder.WebHost.ConfigureKestrel(options =>
     {
-        listenOptions.UseHttps();
+        options.ListenLocalhost(7015, listenOptions =>
+        {
+            listenOptions.UseHttps();
+        });
     });
-});
+}
 
 // Add services to the container.
 //builder.Services.AddDbContext<AppDbContext>(options => {
@@ -34,7 +37,10 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         corsBuilder =>
         {
-            corsBuilder.WithOrigins("https://localhost:61207")
+            corsBuilder.WithOrigins(
+                "https://localhost:61207",
+                "https://todo-app-fkbjfsbuhfbkaza4.canadacentral-01.azurewebsites.net"
+            )
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowCredentials();
