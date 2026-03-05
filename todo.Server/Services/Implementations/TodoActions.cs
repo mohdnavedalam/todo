@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using todo.Server.Data;
 using todo.Server.Models.Todo;
 using todo.Server.Services.Contracts;
@@ -8,11 +7,12 @@ namespace todo.Server.Services.Implementations
 {
     public class TodoActions : ITodoActions
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
         public TodoActions(AppDbContext context)
         {
             _context = context;
         }
+
         public async Task<Todos> AddTodo(Todos todo)
         {
             await _context.Todos.AddAsync(todo);
@@ -20,39 +20,38 @@ namespace todo.Server.Services.Implementations
             return todo;
         }
 
-        public Task<bool> DeleteTodo(int id)
+        public async Task<bool> DeleteTodo(int id, int userId)
         {
-            var todoinDb = _context.Todos.Find(id);
+            var todoinDb = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
             if (todoinDb == null)
             {
-                return Task.FromResult(false);
+                return false;
             }
             _context.Todos.Remove(todoinDb);
-            _context.SaveChangesAsync();
-            return Task.FromResult(true);
+            await _context.SaveChangesAsync();
+            return true;
         }
 
-        public Task<List<Todos>> GetAllTodos()
+        public async Task<List<Todos>> GetAllTodos(int userId)
         {
-            return _context.Todos.ToListAsync();
+            return await _context.Todos.Where(t => t.UserId == userId).ToListAsync();
         }
 
-        public Task<Todos?> GetTodoById(int id)
+        public async Task<Todos?> GetTodoById(int id, int userId)
         {
-            var todoinDb = _context.Todos.Find(id);
-            return Task.FromResult(todoinDb);
+            return await _context.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
         }
 
-        public Task<Todos?> UpdateTodo(int id, Todos todo)
+        public async Task<Todos?> UpdateTodo(int id, Todos todo, int userId)
         {
-            var todoinDb = _context.Todos.Find(id);
+            var todoinDb = await _context.Todos.FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
             if (todoinDb == null)
             {
-                return Task.FromResult<Todos?>(null);
+                return null;
             }
             todoinDb.Task = todo.Task;
-            _context.SaveChangesAsync();
-            return Task.FromResult<Todos?>(todoinDb);
+            await _context.SaveChangesAsync();
+            return todoinDb;
         }
     }
 }

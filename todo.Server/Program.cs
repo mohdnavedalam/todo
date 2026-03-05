@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using todo.Server.Data;
 using todo.Server.Services.Contracts;
 using todo.Server.Services.Implementations;
@@ -18,17 +21,39 @@ if (builder.Environment.IsDevelopment())
 }
 
 // Add services to the container.
-//builder.Services.AddDbContext<AppDbContext>(options => {
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultDbConnection"));
-//});
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDbConnection"), builder =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureDbConnection"), sqlOptions =>
     {
-        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+        sqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
     });
 });
+
+// JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("JWT Key is not configured.");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<ITodoActions, TodoActions>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnetcore/openapi
 builder.Services.AddOpenApi();
@@ -66,6 +91,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowSpecificOrigin");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

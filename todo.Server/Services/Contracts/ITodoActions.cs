@@ -4,10 +4,10 @@ namespace todo.Server.Services.Contracts
 {
     public interface ITodoActions
     {
-        Task<List<Models.Todo.Todos>> GetAllTodos();
-        Task<Todos?> GetTodoById(int id);
+        Task<List<Todos>> GetAllTodos(int userId);
+        Task<Todos?> GetTodoById(int id, int userId);
         Task<Todos> AddTodo(Todos todo);
-        Task<Todos?> UpdateTodo(int id, Todos todo);
-        Task<bool> DeleteTodo(int id);
+        Task<Todos?> UpdateTodo(int id, Todos todo, int userId);
+        Task<bool> DeleteTodo(int id, int userId);
     }
 }
