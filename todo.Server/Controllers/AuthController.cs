@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using todo.Server.Models.Auth;
 using todo.Server.Services.Contracts;
 
@@ -50,6 +52,15 @@ namespace todo.Server.Controllers
             }
 
             return Ok(result);
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult Me()
+        {
+            var name = User.FindFirstValue(ClaimTypes.Name);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+            return Ok(new { name, email });
         }
     }
 }
